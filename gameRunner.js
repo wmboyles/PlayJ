@@ -64,12 +64,12 @@ function submitAnswer() {
         // Tell the user if they were right/wrong; ask to display answer; change points.
         if(playerAnswerBox.value == questionAnswer){
             score += questionValue;
-            clueText.innerText = "Correct! The answer is: " + questionAnswer + ".";
+            clueText.innerHTML = "Correct! The answer is: " + questionAnswer + ".";
         } else {
             // Enable answer override option if user was wrong
             score -= questionValue;
             overrideAnswerButton.disabled = false;
-            clueText.innerText = "Incorrect. The answer is: " + questionAnswer + ".";
+            clueText.innerHTML = "Incorrect. The answer is: " + questionAnswer + ".";
         }
         updateScore();
         
