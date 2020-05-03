@@ -36,7 +36,7 @@ function answerOverride() {
     var playerAnswerBox = document.getElementById("player-answer");
     
     if(questionInPlay){
-        questionInPlay = false;
+        //questionInPlay = false;
         
         score += 2*questionValue; // once to get back to original score, and once for being right
         updateScore();
