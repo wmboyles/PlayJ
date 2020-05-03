@@ -62,14 +62,17 @@ function submitAnswer() {
         // Get the answer entered in the textbox
         // Compare it to the actual answer
         // Tell the user if they were right/wrong; ask to display answer; change points.
-        if(playerAnswerBox.value == questionAnswer){
+        if(playerAnswerBox.value.toLowerCase() == questionAnswer.toLowerCase()){
             score += questionValue;
-            clueText.innerHTML = "Correct! The answer is: " + questionAnswer + ".";
+            clueText.innerHTML = "Correct! The answer is \"" + questionAnswer + "\".";
+        } else if (questionAnswer.length == 0) { 
+            score += questionValue;
+            clueText.innerHTML = "Oops! This question appears to be missing an answer. You'll get the points anyway.";
         } else {
             // Enable answer override option if user was wrong
             score -= questionValue;
             overrideAnswerButton.disabled = false;
-            clueText.innerHTML = "Incorrect. The answer is: " + questionAnswer + ".";
+            clueText.innerHTML = "Incorrect. The answer is \"" + questionAnswer + "\".";
         }
         updateScore();
         
@@ -146,10 +149,11 @@ function clueClick(r, c) {
     questionAnswer = buttons[r][c].answer;
 
     // Show the clue category, point value, and air date. Save the question value to add or deduct points.
-    document.getElementById("clue-category").innerText = "Category: " + buttons[r][c].category;
+    document.getElementById("clue-category").innerText = "Category: " + buttons[r][c].category.toUpperCase();
     questionValue = buttons[r][c].value;
     document.getElementById("clue-value").innerText = "Value: $" + questionValue;
-    document.getElementById("clue-airdate").innerText = "Air Date: " + buttons[r][c].air_date;
+    var d = new Date(buttons[r][c].air_date);
+    document.getElementById("clue-airdate").innerText = "Air Date: " + d.toDateString().substring(4);
 
     // Check if category is finished and disable category button if it is.
     if (categoryFinished(c)) {

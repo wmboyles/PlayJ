@@ -39,18 +39,17 @@ function initRequests() {
     
     clue_req.abort();
   });
-  console.log(categories);
-  console.log(clues);
+  //console.log(categories);
+  //console.log(clues);
 }
 
 
 function display() {
-  console.log("Running Display")
+  //console.log("Running Display")
   for (var i = 0; i < 6; i++) { // row
     for (var j = 0; j < 6; j++) { // column
-        if (i == 0) {
-           buttons[i][j].button_text = categories[j];
-        } else {
+        buttons[i][j].button_text = categories[j];
+        if ( i != 0) {
            buttons[i][j].button_text = "" + (200 * i);
            var my_clue = clues[5 * j + (i-1)];
            buttons[i][j].clue = my_clue.question;
