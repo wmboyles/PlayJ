@@ -41,7 +41,7 @@ function answerOverride() {
         score += 2*questionValue; // once to get back to original score, and once for being right
         updateScore();
         
-        clueText.innerText = "Correct! The answer is: " + questionAnswer + ".";
+        clueText.innerHTML = "Correct! The answer is \"" + questionAnswer + "\".";
         
         overrideAnswerButton.disabled = true;
         submitAnswerButton.innerText = "Next Question";
@@ -68,7 +68,9 @@ function submitAnswer() {
         } else if (questionAnswer.length == 0) { 
             score += questionValue;
             clueText.innerHTML = "Oops! This question appears to be missing an answer. You'll get the points anyway.";
-        } else {
+        } else if(playerAnswerBox.value.length == 0 ){ // no point deductions for not guessing incorrectly
+            clueText.innerHTML = "Incorrect. The answer is \"" + questionAnswer + "\".";
+        }else {
             // Enable answer override option if user was wrong
             score -= questionValue;
             overrideAnswerButton.disabled = false;
@@ -97,6 +99,10 @@ function submitAnswer() {
         
         // Change the "Next Question" button back into the "Submit Answer" button.
         submitAnswerButton.innerText = "Submit Answer";
+        
+        if(gameOver()){
+            document.getElementById("clue-text").innerText = "Good Game!";
+        }
     }
 }
 
