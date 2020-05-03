@@ -14,13 +14,17 @@ more API calls are made for the duration of the game.
 var categories = []
 var clues = [];
 function initRequests() {
-  var x =  Math.floor(1 + Math.random() * 18408);
-  var cat_req = new XMLHttpRequest();
-  cat_req.open('GET', 'https://jservice.io/api/categories?count=6&offset=' + x ,false)
-  cat_req.send();
-  var arr = JSON.parse(cat_req.response);
+  var arr = [];
+  for(var i = 0; i < 6; i++){
+    var x =  Math.floor(1 + Math.random() * 18408);
+      var cat_req = new XMLHttpRequest();
+      cat_req.open('GET', 'https://jservice.io/api/categories?count=1&offset=' + x ,false)
+      cat_req.send();
+      arr.push(JSON.parse(cat_req.response)[0]);
+      
+      cat_req.abort(); 
+  }
   
-  cat_req.abort();
 
 
   arr.forEach(cat => {
