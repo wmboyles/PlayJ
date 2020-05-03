@@ -11,22 +11,45 @@ more API calls are made for the duration of the game.
 // TODO: a function that selects 6 different categories, each with questions that have the right dollar amounts.
 
 // TODO: a function that takes an object from create.js and fills in the information for the corresponding question.
-var cat_req = new XMLHttpRequest();
-cat_req.open('GET', 'http://jservice.io/api/categories?count=6', false)
-cat_req.send();
-var arr = JSON.parse(cat_req.response);
-
 var categories = []
 var clues = [];
-arr.forEach(cat => {
-  categories.push(cat.title);
-  var clue_req = new XMLHttpRequest();
-  clue_req.open("GET", "http://jservice.io/api/clues?category="+cat.id, false);
-  clue_req.send();
-  var arr2 = JSON.parse(clue_req.response);
-  for(var i = 0; i < 5; i++){
-    clues.push(arr2[i]); 
+function initRequests() {
+  var cat_req = new XMLHttpRequest();
+  cat_req.open('GET', 'http://jservice.io/api/categories?count=6', false)
+  cat_req.send();
+  var arr = JSON.parse(cat_req.response);
+
+
+  arr.forEach(cat => {
+    categories.push(cat.title);
+    var clue_req = new XMLHttpRequest();
+    clue_req.open("GET", "http://jservice.io/api/clues?category="+cat.id, false);
+    clue_req.send();
+    var arr2 = JSON.parse(clue_req.response);
+    for(var i = 0; i < 5; i++){
+      clues.push(arr2[i]); 
+    }
+  });
+  //console.log(categories);
+  //console.log(clues);
+}
+
+
+function display() {
+  for (var i = 0; i < 5; i++) { // row
+    for (var j = 0; j < 6; j++) { // column
+        if (i == 0) {
+           buttons[i][j].button_text = categories[i];
+        } else {
+           buttons[i][j].button_text = "" + (200 * i);
+           var my_clue = clues[5 * j + (i-1)];
+           buttons[i][j].clue = my_clue.question;
+           buttons[i][j].value = my_clue.value;
+           buttons[i][j].answer = my_clue.answer;
+           buttons[i][j].category = categories[i];
+           buttons[i][j].air_date = my_clue.airdate;
+          
+        }
+    }
   }
-});
-console.log(categories);
-console.log(clues);
+}
