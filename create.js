@@ -100,12 +100,24 @@ function createButtonArray() {
 
     for (var i = 0; i < buttons.length; i++) {
         buttons[i] = new Array(button_grid_dimensions.cols);
+        for(var j = 0; j < buttons[i].length; j++){
+            buttons[i][j] = {
+                    button_element: null,                       // The actual button element.
+                    button_text: "ERROR"  ,              // The text for the button. Either a category name or clue point value
+                    value: 0,                          // Point value of clue. Category names have point value of 0.
+                    clue: "ERROR",        // The actual text of the clue to be displayed
+                    answer: "ERROR",                          // The answer to the clue
+                    category: "ERROR", // The category of the clue
+                    air_date: "ERROR"  // The air date of this clue
+            };
+        }
     }
 }
 
 /** Creates the board of clue and category tiles with values as a grid of buttons. */
 function createBoard() {
     createButtonArray();
+    display(); // calls APIcaller.js to initialize button field with actual data
     
     var board = document.createElement("div");
     board.className = "d-flex flex-column";
@@ -139,11 +151,14 @@ function createBoard() {
                     btnSpan.style.color = "yellow";
                     btnSpan.style.fontSize = "36pt";
                 }
-                btnSpan.innerHTML = r == 0 ? "<strong>CATEGORY " + c + "</strong>" : "<strong>$" + 2*r + "00</strong>";
+                btnSpan.innerHTML  = r == 0 ? "<strong>" + buttons[r][c].button_text.toUpperCase() + "</strong>" : "<strong>$" + buttons[r][c].button_text + "</strong>";
+                
 
                 btn.appendChild(btnSpan);
                 mycol.appendChild(btn);
                 myrow.appendChild(mycol);
+                
+                buttons[r][c].button_element = btn;
 
                 // TODO: use the API to fill in these values with the actual things
                 
@@ -155,6 +170,7 @@ function createBoard() {
                 
                 // One lazy option with the API interaction may be just to ask the API for all
                 // clues from a specific air date, and fill in as needed.
+                /*
                 buttons[r][c] = {
                     button_element: btn,                       // The actual button element.
                     button_text: "" + r * 200,                 // The text for the button. Either a category name or clue point value
@@ -164,13 +180,18 @@ function createBoard() {
                     category: "Test Category " + r + ", " + c, // The category of the clue
                     air_date: "Test Air Date " + r + ", " + c  // The air date of this clue
                 };
+                */
             }(r, c));
         }
 
         board.appendChild(myrow);
     }
+    
+    
 
     document.getElementById("container").appendChild(board);
+    
+    
 }
 
 /** 
@@ -187,6 +208,7 @@ function create() {
     
     // TODO: May want to call API here to choose some categories and maybe even questions
     
+    initRequests();
     createBoard();
     createSidebar();
 }

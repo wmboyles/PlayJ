@@ -18,6 +18,8 @@ function initRequests() {
   cat_req.open('GET', 'http://jservice.io/api/categories?count=6', false)
   cat_req.send();
   var arr = JSON.parse(cat_req.response);
+  
+  cat_req.abort();
 
 
   arr.forEach(cat => {
@@ -29,17 +31,20 @@ function initRequests() {
     for(var i = 0; i < 5; i++){
       clues.push(arr2[i]); 
     }
+    
+    clue_req.abort();
   });
-  //console.log(categories);
-  //console.log(clues);
+  console.log(categories);
+  console.log(clues);
 }
 
 
 function display() {
-  for (var i = 0; i < 5; i++) { // row
+  console.log("Running Display")
+  for (var i = 0; i < 6; i++) { // row
     for (var j = 0; j < 6; j++) { // column
         if (i == 0) {
-           buttons[i][j].button_text = categories[i];
+           buttons[i][j].button_text = categories[j];
         } else {
            buttons[i][j].button_text = "" + (200 * i);
            var my_clue = clues[5 * j + (i-1)];
@@ -47,8 +52,7 @@ function display() {
            buttons[i][j].value = my_clue.value;
            buttons[i][j].answer = my_clue.answer;
            buttons[i][j].category = categories[i];
-           buttons[i][j].air_date = my_clue.airdate;
-          
+           buttons[i][j].air_date = my_clue.airdate; 
         }
     }
   }
