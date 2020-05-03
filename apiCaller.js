@@ -50,7 +50,7 @@ function display() {
            buttons[i][j].button_text = "" + (200 * i);
            var my_clue = clues[5 * j + (i-1)];
            buttons[i][j].clue = my_clue.question;
-           buttons[i][j].value = my_clue.value;
+           //buttons[i][j].value = my_clue.value;
            buttons[i][j].answer = my_clue.answer;
            buttons[i][j].category = categories[j];
            buttons[i][j].air_date = my_clue.airdate; 
