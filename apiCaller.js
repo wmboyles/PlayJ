@@ -15,7 +15,7 @@ var categories = []
 var clues = [];
 function initRequests() {
   var cat_req = new XMLHttpRequest();
-  cat_req.open('GET', 'http://jservice.io/api/categories?count=6', false)
+  cat_req.open('GET', 'https://jservice.io/api/categories?count=6', false)
   cat_req.send();
   var arr = JSON.parse(cat_req.response);
   
@@ -25,7 +25,7 @@ function initRequests() {
   arr.forEach(cat => {
     categories.push(cat.title);
     var clue_req = new XMLHttpRequest();
-    clue_req.open("GET", "http://jservice.io/api/clues?category="+cat.id, false);
+    clue_req.open("GET", "https://jservice.io/api/clues?category="+cat.id, false);
     clue_req.send();
     var arr2 = JSON.parse(clue_req.response);
     for(var i = 0; i < 5; i++){
