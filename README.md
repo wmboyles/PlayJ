@@ -1,2 +1,3 @@
 # PlayJ
-A single-player Jeopardy! simulator that uses the jService API.
+A single-player _Jeopardy!_ simulator that uses the jService API.
+[PlayJ](https://wmboyles.github.io/PlayJ/)
