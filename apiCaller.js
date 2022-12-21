@@ -13,63 +13,44 @@ more API calls are made for the duration of the game.
 // TODO: a function that takes an object from create.js and fills in the information for the corresponding question.
 const MAX_OFFSET = 5500;
 
-var categories = []
-var clues = [];
+var categories_clues = []
 
-function initRequests() {
-    // Get NUM_CATEGORIES categories, each with at least NUM_CLUES_PER_CATEGORY clues
-    var categories_arr = [];
-    for (var i = 0; i < NUM_CATEGORIES; i++) {
-        const offset = Math.floor(1 + Math.random() * MAX_OFFSET);
-        const cat_req = new XMLHttpRequest();
-        cat_req.open('GET', 'https://jservice.io/api/categories?count=1&offset=' + offset, false)
-        cat_req.send();
+async function requestClues() {
+    // Get NUM_CATEGORIES categories async, each with at least NUM_CLUES_PER_CATEGORY clues
+    while (categories_clues.length < NUM_CATEGORIES) {
+        var promises = [];
 
-        const category_response = JSON.parse(cat_req.response)[0];
-        if (category_response.clues_count < NUM_CLUES_PER_CATEGORY) {
-            console.log("Category " + category_response + " has less than " + NUM_CLUES_PER_CATEGORY + " clues. Retrying with different category.")
-            i--;
-        } else {
-            categories_arr.push(JSON.parse(cat_req.response)[0]);
+        for (var i = 0; i < NUM_CATEGORIES - categories_clues.length; i++) {
+            const offset = Math.floor(1 + Math.random() * MAX_OFFSET);
+            promises.push(
+                fetch('https://jservice.io/api/category?id=' + offset).then(res => res.json()).then(category => {
+                    if (category.clues.length >= NUM_CLUES_PER_CATEGORY) {
+                        categories_clues.push(category);
+                    } else {
+                        console.warn("Category '" + category.title + "' does not have enough clues. Retrying...");
+                    }
+                })
+            );
         }
-
-        cat_req.abort();
+        await Promise.all(promises)
     }
-
-    // For each category, get NUM_CLUES_PER_CATEGORY clues
-    categories_arr.forEach(category => {
-        categories.push(category.title);
-
-        const clue_req = new XMLHttpRequest();
-        clue_req.open("GET", "https://jservice.io/api/clues?category=" + category.id, false);
-        clue_req.send();
-
-        const clue_res = JSON.parse(clue_req.response);
-        clue_res.forEach(clue => {
-            clues.push(clue);
-        });
-
-        clue_req.abort();
-    });
 }
 
 
-function display() {
-    // Fill the category titles
-    for (const [index, category] of categories.entries()) {
-        buttons[0][index].button_text = category;
-    }
+async function getClues() {
+    await requestClues();
 
-    // Fill the category clues
-    for (var i = 1; i < NUM_CLUES_PER_CATEGORY + 1; i++) { // row
-        for (var j = 0; j < NUM_CATEGORIES; j++) { // column
-            buttons[i][j].button_text = "" + (200 * i);
+    for (const [categoryIndex, category] of categories_clues.entries()) {
+        buttons[0][categoryIndex].button_text = category.title;
 
-            const my_clue = clues[NUM_CLUES_PER_CATEGORY * j + (i - 1)];
-            buttons[i][j].clue = my_clue.question;
-            buttons[i][j].answer = my_clue.answer;
-            buttons[i][j].air_date = my_clue.airdate;
-            buttons[i][j].category = categories[j];
+        for (const [clueIndex, clue] of category.clues.slice(0, NUM_CLUES_PER_CATEGORY).entries()) {
+            var button = buttons[clueIndex + 1][categoryIndex];
+
+            button.button_text = "" + (200 * (clueIndex + 1));
+            button.clue = clue.question;
+            button.answer = clue.answer;
+            button.air_date = clue.airdate;
+            button.category = category.title;
         }
     }
 }

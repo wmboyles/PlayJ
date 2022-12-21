@@ -2,15 +2,15 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="description", content="Single-player J! game">
-    
-    <meta name="author", content="William Boyles">
-    <meta name="author", content="Savan Doshi">
+    <meta name="description" , content="Single-player J! game">
+
+    <meta name="author" , content="William Boyles">
+    <meta name="author" , content="Savan Doshi">
 
     <title>J!</title>
 
     <!-- Use Bootstrap -->
-    <link rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    <link rel="stylesheet" , href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <!-- Scripts that create and run everything -->
@@ -20,8 +20,34 @@
 </head>
 
 <!-- TODO: This entire thing looks terrible on anything mobile. If you can find a better, more-flexible design, go for it. -->
+
 <body onload="create();">
-    <!-- If we want, we can include some elements in HTML instead of JS, especially the sidebar stuff. -->
+    <div class="d-flex flex-row" id="container">
+        <!-- Board of buttons -->
+        <div class="d-flex flex-column" id="board-buttons">
+
+        </div>
+        <!-- Sidebar -->
+        <div class="d-flex flex-column flex-grow-1 mx-2 mt-2" id="sidebar">
+            <h1 class="text-center m-0" id="player-score">SCORE: $0</h1>
+            <div class="jumbotron jumbotron-fluid my-2 flex-grow-1">
+                <h2 class="text-center align-middle" id="clue-text">Select a Question</h2>
+            </div>
+            <h4 class="text-center mt-0 p-0" id="clue-category">Category: </h4>
+            <h4 class="text-center mb-2 p-0" id="clue-value">Value: </h4>
+            <h4 class="text-center mb-2 p-0" id="clue-airdate">Air Date: </h4>
+            <div class="input-group">
+                <input type="text" class="form-control" id="player-answer"
+                    placeholder="Answer (in the form of a question)" />
+            </div>
+            <div class="d-flex flex-row">
+                <button type="button" class="mt-2 btn btn-primary btn-block border border-light" id="answer-submit"
+                    disabled="">Submit Answer</button>
+                <button type="button" class="mt-2 btn btn-primary btn-block border border-light" id="answer-override"
+                    disabled="">I'm Right</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
