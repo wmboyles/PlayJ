@@ -11,53 +11,65 @@ more API calls are made for the duration of the game.
 // TODO: a function that selects 6 different categories, each with questions that have the right dollar amounts.
 
 // TODO: a function that takes an object from create.js and fills in the information for the corresponding question.
+const MAX_OFFSET = 5500;
+
 var categories = []
 var clues = [];
+
 function initRequests() {
-  var arr = [];
-  for(var i = 0; i < 6; i++){
-    var x =  Math.floor(1 + Math.random() * 18408);
-      var cat_req = new XMLHttpRequest();
-      cat_req.open('GET', 'https://jservice.io/api/categories?count=1&offset=' + x ,false)
-      cat_req.send();
-      arr.push(JSON.parse(cat_req.response)[0]);
-      
-      cat_req.abort(); 
-  }
-  
+    // Get NUM_CATEGORIES categories, each with at least NUM_CLUES_PER_CATEGORY clues
+    var categories_arr = [];
+    for (var i = 0; i < NUM_CATEGORIES; i++) {
+        const offset = Math.floor(1 + Math.random() * MAX_OFFSET);
+        const cat_req = new XMLHttpRequest();
+        cat_req.open('GET', 'https://jservice.io/api/categories?count=1&offset=' + offset, false)
+        cat_req.send();
 
+        const category_response = JSON.parse(cat_req.response)[0];
+        if (category_response.clues_count < NUM_CLUES_PER_CATEGORY) {
+            console.log("Category " + category_response + " has less than " + NUM_CLUES_PER_CATEGORY + " clues. Retrying with different category.")
+            i--;
+        } else {
+            categories_arr.push(JSON.parse(cat_req.response)[0]);
+        }
 
-  arr.forEach(cat => {
-    categories.push(cat.title);
-    var clue_req = new XMLHttpRequest();
-    clue_req.open("GET", "https://jservice.io/api/clues?category="+cat.id, false);
-    clue_req.send();
-    var arr2 = JSON.parse(clue_req.response);
-    for(var i = 0; i < 5; i++){
-      clues.push(arr2[i]); 
+        cat_req.abort();
     }
-    
-    clue_req.abort();
-  });
-  //console.log(categories);
-  //console.log(clues);
+
+    // For each category, get NUM_CLUES_PER_CATEGORY clues
+    categories_arr.forEach(category => {
+        categories.push(category.title);
+
+        const clue_req = new XMLHttpRequest();
+        clue_req.open("GET", "https://jservice.io/api/clues?category=" + category.id, false);
+        clue_req.send();
+
+        const clue_res = JSON.parse(clue_req.response);
+        clue_res.forEach(clue => {
+            clues.push(clue);
+        });
+
+        clue_req.abort();
+    });
 }
 
 
 function display() {
-  //console.log("Running Display")
-  for (var i = 0; i < 6; i++) { // row
-    for (var j = 0; j < 6; j++) { // column
-        buttons[i][j].button_text = categories[j];
-        if ( i != 0) {
-           buttons[i][j].button_text = "" + (200 * i);
-           var my_clue = clues[5 * j + (i-1)];
-           buttons[i][j].clue = my_clue.question;
-           //buttons[i][j].value = my_clue.value;
-           buttons[i][j].answer = my_clue.answer;
-           buttons[i][j].category = categories[j];
-           buttons[i][j].air_date = my_clue.airdate; 
+    // Fill the category titles
+    for (const [index, category] of categories.entries()) {
+        buttons[0][index].button_text = category;
+    }
+
+    // Fill the category clues
+    for (var i = 1; i < NUM_CLUES_PER_CATEGORY + 1; i++) { // row
+        for (var j = 0; j < NUM_CATEGORIES; j++) { // column
+            buttons[i][j].button_text = "" + (200 * i);
+
+            const my_clue = clues[NUM_CLUES_PER_CATEGORY * j + (i - 1)];
+            buttons[i][j].clue = my_clue.question;
+            buttons[i][j].answer = my_clue.answer;
+            buttons[i][j].air_date = my_clue.airdate;
+            buttons[i][j].category = categories[j];
         }
     }
-  }
 }

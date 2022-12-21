@@ -5,10 +5,13 @@ state is in gameRunner.js. This file should only be referenced after gameRunner.
 have been referenced.
 */
 
+const NUM_CATEGORIES = 6;
+const NUM_CLUES_PER_CATEGORY = 5;
+
 /** A 2D array of clue objects. The first row is of categories. */
 var buttons;
 /** The number of row / cols in the grid of clue buttons. These values are both 6 in normal J! */
-var button_grid_dimensions = { rows: 6, cols: 6 };
+var button_grid_dimensions = { rows: NUM_CATEGORIES, cols: NUM_CLUES_PER_CATEGORY + 1 };
 
 /** 
 Creates the right hand portion of the screen that displays the clue, question info, answer textbox,
@@ -73,7 +76,7 @@ function createSidebar() {
     submit_button.id = "answer-submit";
     submit_button.innerText = "Submit Answer";
     submit_button.disabled = true;
-    submit_button.addEventListener("click", function() {
+    submit_button.addEventListener("click", function () {
         submitAnswer();
     });
     button_row.appendChild(submit_button);
@@ -84,12 +87,12 @@ function createSidebar() {
     answer_override.id = "answer-override";
     answer_override.innerText = "I'm Right";
     answer_override.disabled = true;
-    answer_override.addEventListener("click", function() {
+    answer_override.addEventListener("click", function () {
         answerOverride();
     });
     button_row.appendChild(answer_override);
     sidebar.appendChild(button_row);
-    
+
 
     document.getElementById("container").appendChild(sidebar);
 }
@@ -100,15 +103,15 @@ function createButtonArray() {
 
     for (var i = 0; i < buttons.length; i++) {
         buttons[i] = new Array(button_grid_dimensions.cols);
-        for(var j = 0; j < buttons[i].length; j++){
+        for (var j = 0; j < buttons[i].length; j++) {
             buttons[i][j] = {
-                    button_element: null,                       // The actual button element.
-                    button_text: "ERROR"  ,              // The text for the button. Either a category name or clue point value
-                    value: 200*i,                          // Point value of clue. Category names have point value of 0.
-                    clue: "ERROR",        // The actual text of the clue to be displayed
-                    answer: "ERROR",                          // The answer to the clue
-                    category: "ERROR", // The category of the clue
-                    air_date: "ERROR"  // The air date of this clue
+                button_element: null,                       // The actual button element.
+                button_text: "ERROR",              // The text for the button. Either a category name or clue point value
+                value: 200 * i,                          // Point value of clue. Category names have point value of 0.
+                clue: "ERROR",        // The actual text of the clue to be displayed
+                answer: "ERROR",                          // The answer to the clue
+                category: "ERROR", // The category of the clue
+                air_date: "ERROR"  // The air date of this clue
             };
         }
     }
@@ -118,7 +121,7 @@ function createButtonArray() {
 function createBoard() {
     createButtonArray();
     display(); // calls APIcaller.js to initialize button field with actual data
-    
+
     var board = document.createElement("div");
     board.className = "d-flex flex-column";
     board.id = "board-buttons";
@@ -151,23 +154,23 @@ function createBoard() {
                     btnSpan.style.color = "yellow";
                     btnSpan.style.fontSize = "36pt";
                 }
-                btnSpan.innerHTML  = r == 0 ? "<strong>" + buttons[r][c].button_text.toUpperCase() + "</strong>" : "<strong>$" + buttons[r][c].button_text + "</strong>";
-                
+                btnSpan.innerHTML = r == 0 ? "<strong>" + buttons[r][c].button_text.toUpperCase() + "</strong>" : "<strong>$" + buttons[r][c].button_text + "</strong>";
+
 
                 btn.appendChild(btnSpan);
                 mycol.appendChild(btn);
                 myrow.appendChild(mycol);
-                
+
                 buttons[r][c].button_element = btn;
 
                 // TODO: use the API to fill in these values with the actual things
-                
+
                 // Good option is probably to initialize the button_element only here, pass the
                 // function to the API handler, which will fill in the rest.
-                
+
                 // Another option may be to pass in the entire buttons array after this initial
                 // stuff, and let the API interaction fill in the entire array.
-                
+
                 // One lazy option with the API interaction may be just to ask the API for all
                 // clues from a specific air date, and fill in as needed.
                 /*
@@ -186,12 +189,12 @@ function createBoard() {
 
         board.appendChild(myrow);
     }
-    
-    
+
+
 
     document.getElementById("container").appendChild(board);
-    
-    
+
+
 }
 
 /** 
@@ -205,9 +208,9 @@ function create() {
     container.className = "d-flex flex-row";
     container.id = "container";
     document.body.appendChild(container);
-    
+
     // TODO: May want to call API here to choose some categories and maybe even questions
-    
+
     initRequests();
     createBoard();
     createSidebar();

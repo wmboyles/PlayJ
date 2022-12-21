@@ -17,8 +17,8 @@ var questionValue = 0;
 var questionAnswer;
 
 /** Updates the score displayed to the user to reflect the value of the score variable. */
-function updateScore(){
-    if(score < 0){
+function updateScore() {
+    if (score < 0) {
         document.getElementById("player-score").innerText = "SCORE: -$" + Math.abs(score);
     } else {
         document.getElementById("player-score").innerText = "SCORE: $" + score;
@@ -34,15 +34,15 @@ function answerOverride() {
     var overrideAnswerButton = document.getElementById("answer-override");
     var clueText = document.getElementById("clue-text");
     var playerAnswerBox = document.getElementById("player-answer");
-    
-    if(questionInPlay){
+
+    if (questionInPlay) {
         //questionInPlay = false;
-        
-        score += 2*questionValue; // once to get back to original score, and once for being right
+
+        score += 2 * questionValue; // once to get back to original score, and once for being right
         updateScore();
-        
+
         clueText.innerHTML = "Correct! The answer is \"" + questionAnswer + "\".";
-        
+
         overrideAnswerButton.disabled = true;
         submitAnswerButton.innerText = "Next Question";
     }
@@ -57,50 +57,50 @@ function submitAnswer() {
     var overrideAnswerButton = document.getElementById("answer-override");
     var clueText = document.getElementById("clue-text");
     var playerAnswerBox = document.getElementById("player-answer");
-    
-    if(submitAnswerButton.innerText === "Submit Answer"){
+
+    if (submitAnswerButton.innerText === "Submit Answer") {
         // Get the answer entered in the textbox
         // Compare it to the actual answer
         // Tell the user if they were right/wrong; ask to display answer; change points.
-        if(playerAnswerBox.value.toLowerCase() == questionAnswer.toLowerCase()){
+        if (playerAnswerBox.value.toLowerCase() == questionAnswer.toLowerCase()) {
             score += questionValue;
             clueText.innerHTML = "Correct! The answer is \"" + questionAnswer + "\".";
-        } else if (questionAnswer.length == 0) { 
+        } else if (questionAnswer.length == 0) {
             score += questionValue;
             clueText.innerHTML = "Oops! This question appears to be missing an answer. You'll get the points anyway.";
-        } else if(playerAnswerBox.value.length == 0 ){ // no point deductions for not guessing incorrectly
+        } else if (playerAnswerBox.value.length == 0) { // no point deductions for not guessing incorrectly
             clueText.innerHTML = "Incorrect. The answer is \"" + questionAnswer + "\".";
-        }else {
+        } else {
             // Enable answer override option if user was wrong
             score -= questionValue;
             overrideAnswerButton.disabled = false;
             clueText.innerHTML = "Incorrect. The answer is \"" + questionAnswer + "\".";
         }
         updateScore();
-        
+
         // Ask user to go to the next question.
         submitAnswerButton.innerText = "Next Question";
-    } else if (submitAnswerButton.innerText === "Next Question"){
+    } else if (submitAnswerButton.innerText === "Next Question") {
         // Clear the user's answer from the answer box
         playerAnswerBox.value = "";
-        
+
         // A question is no longer in play, so disable the submit and override buttons.
         questionInPlay = false;
         submitAnswerButton.disabled = true;
         overrideAnswerButton.disabled = true;
-        
+
         // Change the text that displayed the clue to tell the user to select a question.
         clueText.innerText = "Select a Question"
-        
+
         // Clear is clue info (category, value, air date)
         document.getElementById("clue-category").innerText = "Category: ";
         document.getElementById("clue-value").innerText = "Value: ";
         document.getElementById("clue-airdate").innerText = "Air Date: ";
-        
+
         // Change the "Next Question" button back into the "Submit Answer" button.
         submitAnswerButton.innerText = "Submit Answer";
-        
-        if(gameOver()){
+
+        if (gameOver()) {
             document.getElementById("clue-text").innerText = "Good Game!";
         }
     }
@@ -131,8 +131,8 @@ function categoryFinished(c) {
 /** What happens when the clue button in row r column c of clues is clicked. */
 function clueClick(r, c) {
     // Ignore presses if question is already in play
-    if(questionInPlay) return;
-    
+    if (questionInPlay) return;
+
     // If click category, pick lowest-value unanswered question in category
     if (r == 0) {
         for (var row = 1; row < button_grid_dimensions.rows; row++) {
@@ -142,7 +142,7 @@ function clueClick(r, c) {
             }
         }
     }
-    
+
     // Say there is not a question in play, and enable submit button
     questionInPlay = true;
     document.getElementById("answer-submit").disabled = false;
@@ -150,7 +150,7 @@ function clueClick(r, c) {
     // Disable the clicked button and display the corresponding clue text
     buttons[r][c].button_element.disabled = true;
     document.getElementById("clue-text").innerText = buttons[r][c].clue;
-    
+
     // Save the answer for comparison for when the user enters an answer
     questionAnswer = buttons[r][c].answer;
 
@@ -165,6 +165,6 @@ function clueClick(r, c) {
     if (categoryFinished(c)) {
         buttons[0][c].button_element.disabled = true;
     }
-    
+
     // TODO: What should happen at the end of the game? */
 }
