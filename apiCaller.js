@@ -19,7 +19,6 @@ async function requestClues() {
     // Get NUM_CATEGORIES categories async, each with at least NUM_CLUES_PER_CATEGORY clues
     while (categories_clues.length < NUM_CATEGORIES) {
         var promises = [];
-
         for (var i = 0; i < NUM_CATEGORIES - categories_clues.length; i++) {
             const offset = Math.floor(1 + Math.random() * MAX_OFFSET);
             promises.push(

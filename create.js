@@ -34,7 +34,7 @@ function createButtonArray() {
         for (var j = 0; j < buttons[i].length; j++) {
             buttons[i][j] = {
                 button_element: null,                       // The actual button element.
-                button_text: "Loading...",              // The text for the button. Either a category name or clue point value
+                button_text: "...",              // The text for the button. Either a category name or clue point value
                 value: 200 * i,                          // Point value of clue. Category names have point value of 0.
                 clue: "ERROR",        // The actual text of the clue to be displayed
                 answer: "ERROR",                          // The answer to the clue

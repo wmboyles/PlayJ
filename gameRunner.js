@@ -58,7 +58,7 @@ function submitAnswer() {
     var clueText = document.getElementById("clue-text");
     var playerAnswerBox = document.getElementById("player-answer");
 
-    if (submitAnswerButton.innerText === "Submit Answer") {
+    if (submitAnswerButton.innerText === "Submit/Skip") {
         // Get the answer entered in the textbox
         // Compare it to the actual answer
         // Tell the user if they were right/wrong; ask to display answer; change points.
@@ -98,7 +98,7 @@ function submitAnswer() {
         document.getElementById("clue-airdate").innerText = "Air Date: ";
 
         // Change the "Next Question" button back into the "Submit Answer" button.
-        submitAnswerButton.innerText = "Submit Answer";
+        submitAnswerButton.innerText = "Submit/Skip";
 
         if (gameOver()) {
             document.getElementById("clue-text").innerText = "Good Game!";
